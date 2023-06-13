@@ -71,6 +71,7 @@ header{
     position: relative;
 }
 #topimg{
+    margin-top: -50vh;
     object-fit: cover;
     width: 100%;
     height: 100vh;
