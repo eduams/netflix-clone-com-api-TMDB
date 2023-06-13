@@ -13,7 +13,7 @@ window.onscroll = function() {
   
 console.log(resolutionWidth)
 
-
+//Função que roda automático e esconde a imagem do topo depois de 1 segundo e pega o vídeo da API
 window.onload = function playonstart(){
   setTimeout(function(){
     let header = document.getElementById("topimg");
