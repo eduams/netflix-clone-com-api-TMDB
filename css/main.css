@@ -183,6 +183,7 @@ header{
 }
 .thumbs img{
     padding-right: 10px;
+    opacity: 1;
 }
 .thumbs-vertical{
     padding-left: 5vw;

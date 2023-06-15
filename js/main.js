@@ -1,7 +1,7 @@
 var prevScrollpos = window.pageYOffset;
 var resolutionWidth = window.screen.width;
 var oldsrc;
-
+var mouseon = true;
 window.onscroll = function() {
     var currentScrollPos = window.pageYOffset;
     if (prevScrollpos > currentScrollPos) {
@@ -88,28 +88,82 @@ window.onload = function postersload(){
       )
       .catch(err => console.error(err));  
   }
+
+  let posters_horizontal_filme = document.getElementsByClassName('poster_horizontal_filme');
+
+  for(i=0;i<posters_horizontal_filme.length;i++){
+
+    let movieid = posters_horizontal_filme[i].id;
+
+
+    const options = {
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxMDNiY2FkNzNhNWMzMTQwMjQxZjg5MDkzNjQ2MDk4MSIsInN1YiI6IjY0N2I2OWM2Y2FlZjJkMDEzNjJiMWJmZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.nHBWCz8ipknMv7An_AAUbe4v5uqoQxHznpZTX0SF78w'
+      }
+    };
+    
+    fetch('https://api.themoviedb.org/3/tv/'+movieid+'/images', options)
+      .then(response => response.json())
+      .then(response => {
+        document.getElementById(movieid).setAttribute("onmouseover", "mouseover_movie("+movieid+")");
+        document.getElementById(movieid).setAttribute("onmouseleave", "mouseleave("+movieid+")");
+      }
+      )
+      .catch(err => console.error(err));  
+  }
+
+  
 }
 
 function mouseover(movieid){
-  oldsrc = document.getElementById(movieid).getAttribute("src");
-  const options = {
-    method: 'GET',
-    headers: {
-      accept: 'application/json',
-      Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxMDNiY2FkNzNhNWMzMTQwMjQxZjg5MDkzNjQ2MDk4MSIsInN1YiI6IjY0N2I2OWM2Y2FlZjJkMDEzNjJiMWJmZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.nHBWCz8ipknMv7An_AAUbe4v5uqoQxHznpZTX0SF78w'
-    }
-  };
-    fetch('https://api.themoviedb.org/3/tv/'+movieid+'/images', options)
-    .then(response => response.json())
-    .then(response => {
-      moviefoto = response.backdrops[0].file_path;
-      document.getElementById(movieid).setAttribute("src", "https://www.themoviedb.org/t/p/original/"+response.backdrops[0].file_path);
-    }
-    )
-    .catch(err => console.error(err));  
+  if(mouseon == true){
+    oldsrc = document.getElementById(movieid).getAttribute("src");
+    document.getElementById(movieid).setAttribute("src", "img/carrossel/loading_icon.gif");    
+    const options = {
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxMDNiY2FkNzNhNWMzMTQwMjQxZjg5MDkzNjQ2MDk4MSIsInN1YiI6IjY0N2I2OWM2Y2FlZjJkMDEzNjJiMWJmZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.nHBWCz8ipknMv7An_AAUbe4v5uqoQxHznpZTX0SF78w'
+      }
+    };
+      fetch('https://api.themoviedb.org/3/tv/'+movieid+'/images', options)
+      .then(response => response.json())
+      .then(response => {
+        moviefoto = response.backdrops[0].file_path;
+        document.getElementById(movieid).setAttribute("src", "https://www.themoviedb.org/t/p/original/"+response.backdrops[0].file_path);    
+      }
+      )
+      .catch(err => console.error(err));    
+  mouseon = false;
+  }
+}
+
+function mouseover_movie(movieid){
+  if(mouseon == true){
+    oldsrc = document.getElementById(movieid).getAttribute("src");
+    document.getElementById(movieid).setAttribute("src", "img/carrossel/loading_icon.gif");    
+    const options = {
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxMDNiY2FkNzNhNWMzMTQwMjQxZjg5MDkzNjQ2MDk4MSIsInN1YiI6IjY0N2I2OWM2Y2FlZjJkMDEzNjJiMWJmZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.nHBWCz8ipknMv7An_AAUbe4v5uqoQxHznpZTX0SF78w'
+      }
+    };
+      fetch('https://api.themoviedb.org/3/movie/'+movieid+'/images', options)
+      .then(response => response.json())
+      .then(response => {
+        moviefoto = response.backdrops[0].file_path;
+        document.getElementById(movieid).setAttribute("src", "https://www.themoviedb.org/t/p/original/"+response.backdrops[0].file_path);    
+      }
+      )
+      .catch(err => console.error(err));    
+  mouseon = false;
+  }
 }
 
 function mouseleave(movieid){
-  document.getElementById(movieid).
-  document.getElementById(movieid).setAttribute("src", oldsrc);
+    document.getElementById(movieid).setAttribute("src", oldsrc);
+    mouseon = true;
 }
