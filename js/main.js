@@ -1,7 +1,7 @@
 var prevScrollpos = window.pageYOffset;
 var resolutionWidth = window.screen.width;
 var oldsrc;
-var mouseon = true;
+
 window.onscroll = function() {
     var currentScrollPos = window.pageYOffset;
     if (prevScrollpos > currentScrollPos) {
@@ -15,8 +15,38 @@ window.onscroll = function() {
 console.log(resolutionWidth)
 
 window.onload = function postersload(){
+
+  let header = document.getElementById("topimg");
+  let toplogo = document.getElementById("toplogo");
+  let overview = document.getElementById("overview");
+  
+    const options = {
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxMDNiY2FkNzNhNWMzMTQwMjQxZjg5MDkzNjQ2MDk4MSIsInN1YiI6IjY0N2I2OWM2Y2FlZjJkMDEzNjJiMWJmZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.nHBWCz8ipknMv7An_AAUbe4v5uqoQxHznpZTX0SF78w'
+      }
+    };
+    
+    fetch('https://api.themoviedb.org/3/tv/45790/images', options)
+      .then(response => response.json())
+      .then(response => {
+        topimg.setAttribute("src", "https://www.themoviedb.org/t/p/original/"+response.backdrops[0].file_path);
+        toplogo.setAttribute("src", "https://www.themoviedb.org/t/p/original/"+response.logos[5].file_path);
+      }
+      )
+      .catch(err => console.error(err));  
+
+      fetch('https://api.themoviedb.org/3/tv/45790?language=pt-br', options)
+      .then(response => response.json())
+      .then(response => {
+        overview.innerHTML = response.overview;
+      })
+      .catch(err => console.error(err));
+
+
+
   setTimeout(function(){
-    let header = document.getElementById("topimg");
     header.style.opacity = "1";
     header.remove();
     let headerdiv = document.getElementById("header-media");
@@ -118,7 +148,6 @@ window.onload = function postersload(){
 }
 
 function mouseover(movieid){
-  if(mouseon == true){
     oldsrc = document.getElementById(movieid).getAttribute("src");
     document.getElementById(movieid).setAttribute("src", "img/carrossel/loading_icon.gif");    
     const options = {
@@ -131,17 +160,13 @@ function mouseover(movieid){
       fetch('https://api.themoviedb.org/3/tv/'+movieid+'/images', options)
       .then(response => response.json())
       .then(response => {
-        moviefoto = response.backdrops[0].file_path;
         document.getElementById(movieid).setAttribute("src", "https://www.themoviedb.org/t/p/original/"+response.backdrops[0].file_path);    
       }
       )
       .catch(err => console.error(err));    
-  mouseon = false;
-  }
 }
 
 function mouseover_movie(movieid){
-  if(mouseon == true){
     oldsrc = document.getElementById(movieid).getAttribute("src");
     document.getElementById(movieid).setAttribute("src", "img/carrossel/loading_icon.gif");    
     const options = {
@@ -154,16 +179,12 @@ function mouseover_movie(movieid){
       fetch('https://api.themoviedb.org/3/movie/'+movieid+'/images', options)
       .then(response => response.json())
       .then(response => {
-        moviefoto = response.backdrops[0].file_path;
-        document.getElementById(movieid).setAttribute("src", "https://www.themoviedb.org/t/p/original/"+response.backdrops[0].file_path);    
+       document.getElementById(movieid).setAttribute("src", "https://www.themoviedb.org/t/p/original/"+response.backdrops[0].file_path);    
       }
       )
       .catch(err => console.error(err));    
-  mouseon = false;
-  }
 }
 
 function mouseleave(movieid){
     document.getElementById(movieid).setAttribute("src", oldsrc);
-    mouseon = true;
 }
